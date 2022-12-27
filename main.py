@@ -1,47 +1,33 @@
 import os
 from os import path
 import argparse
-from itertools import filterfalse, tee
-from typing import Iterable, Callable
+from filters import partition, is_directory, filter_excludes
 
-SEP = '/'
+SEPARATOR = '/'
 TEE = '├── '
 CORNER = '└── '
 SPACER = '│   '
 
-def partition(func: Callable, iterable: Iterable) -> tuple[Iterable, Iterable]:
-    first, second = tee(iterable, 2)
-    return filterfalse(func, first), filter(func, second)
-
-def file_ignores(file: str) -> bool:
-    return file.find('.') != 0
-
-def folder_ignores(folder: str) -> bool:
-    return folder.find('pycache') < 0 and folder.find('venv') < 0 and folder.find('.') < 0
-
-def filter_ignores(files: Iterable, folders: Iterable) -> tuple[tuple, tuple]:
-    return tuple(filter(file_ignores, files)), tuple(filter(folder_ignores, folders))
-
 def _print_files(files: tuple, indent: str) -> None:
     for file in files:
-        shape = CORNER if file == files[-1] else TEE
+        shape: str = CORNER if file == files[-1] else TEE
         print(f'{indent}{shape}{file}')
 
-def _print_folders(root_directory: str, folders: tuple, indent: str) -> None:
-    for folder in folders:
-        shape = CORNER if folder == folders[-1] else TEE
-        print(f'{indent}{shape}{folder}{SEP}')
+def _print_folders(current_directory: path, directories: tuple, indent: str) -> None:
+    for directory in directories:
+        shape: str = CORNER if directory == directories[-1] else TEE
+        print(f'{indent}{shape}{directory}{SEPARATOR}')
 
-        next_directory_path = os.path.join(root_directory, folder)
+        next_directory_path = os.path.join(current_directory, directory)
         print_directory_tree(next_directory_path, f'{indent}{SPACER}')
 
-def print_directory_tree(root_directory: path, indent: str = '') -> None:
-    contents = os.listdir(root_directory)
-    files, folders = partition(lambda item: os.path.isdir(os.path.join(root_directory, item)), contents)
-    files, folders = filter_ignores(files, folders)
+def print_directory_tree(current_directory: path, indent: str = '') -> None:
+    contents = os.listdir(current_directory)
+    files, directories = partition(lambda item: is_directory(current_directory, item), contents)
+    files, directories = filter_excludes(files, directories)
 
     _print_files(files, indent)
-    _print_folders(root_directory, folders, indent)
+    _print_folders(current_directory, directories, indent)
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -51,7 +37,7 @@ def main() -> None:
     directory_path = args.path if args.path else os.getcwd()
     directory_path = os.path.normpath(directory_path)
 
-    print(f'{os.path.basename(directory_path)}{SEP}')
+    print(f'{os.path.basename(directory_path)}{SEPARATOR}')
     print_directory_tree(directory_path)
 
 
