@@ -22,13 +22,13 @@ def _print_files(files, indent):
 
 def _print_folders(root_directory, folders, indent):
     for folder in folders:
-        item_path = os.path.join(root_directory, folder)
         if folder == folders[-1]:
             print(f'{indent}└── {folder}{SEP}')
         else:
             print(f'{indent}├── {folder}{SEP}')
 
-        print_directory_tree(item_path, f'{indent}│   ')
+        next_directory_path = os.path.join(root_directory, folder)
+        print_directory_tree(next_directory_path, f'{indent}│   ')
 
 def print_directory_tree(root_directory, indent=''):
     contents = os.listdir(root_directory)
@@ -40,7 +40,7 @@ def print_directory_tree(root_directory, indent=''):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('path', help='the name of the file to process', nargs="?", action='store')
+    parser.add_argument('path', help='the directory path to process', nargs="?", action='store')
     args = parser.parse_args()
 
     directory_path = args.path if args.path else os.getcwd()
