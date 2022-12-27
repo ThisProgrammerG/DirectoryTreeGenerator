@@ -43,11 +43,8 @@ def main():
     parser.add_argument('path', help='the name of the file to process', nargs="?", action='store')
     args = parser.parse_args()
 
-    if args.path:
-        print('Got: ', args.path)
-        directory_path = os.path.normpath(args.path)
-    else:
-        directory_path = os.path.normpath(os.getcwd())
+    directory_path = args.path if args.path else os.getcwd()
+    directory_path = os.path.normpath(directory_path)
 
     print(f'{os.path.basename(directory_path)}{SEP}')
     print_directory_tree(directory_path)
