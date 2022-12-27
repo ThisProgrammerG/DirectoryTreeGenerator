@@ -45,7 +45,7 @@ def print_directory_tree(root_directory: path, indent: str = '') -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument('path', help='the directory path to process', nargs="?", action='store')
+    parser.add_argument('path', help='the directory path to display', nargs="?", action='store')
     args = parser.parse_args()
 
     directory_path = args.path if args.path else os.getcwd()
