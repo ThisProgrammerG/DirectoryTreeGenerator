@@ -21,35 +21,3 @@ def folder_excludes(folder: str) -> bool:
 
 def filter_excludes(files: Iterable, folders: Iterable) -> tuple[tuple, tuple]:
     return tuple(filter(file_excludes, files)), tuple(filter(folder_excludes, folders))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

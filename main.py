@@ -40,6 +40,5 @@ def main() -> None:
     print(f'{os.path.basename(directory_path)}{SEPARATOR}')
     print_directory_tree(directory_path)
 
-
 if __name__ == '__main__':
     main()
