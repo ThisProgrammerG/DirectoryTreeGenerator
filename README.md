@@ -1,6 +1,6 @@
 # DirectoryTreeGenerator
 
-Generate a directory tree where the script is run or pass a directory path in.
+Generate a directory tree with the current working directory or optionally pass in a different path.
 
 python main.py
 
